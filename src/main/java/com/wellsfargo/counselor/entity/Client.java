@@ -5,12 +5,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-public class Advisor {
+public class Client {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "advisor_id")
-    private Long advisorId;
+    @Column(name = "client_id")
+    private Long clientId;
+
+    @ManyToOne
+    @JoinColumn(name = "advisor_id")
+    private Advisor advisor;
 
     @Column(name = "first_name")
     private String firstName;
@@ -27,15 +31,16 @@ public class Advisor {
     @Column(name = "email")
     private String email;
 
-    @OneToMany(mappedBy = "advisor", cascade = CascadeType.ALL)
-    private List<Client> clients = new ArrayList<>();
+    @OneToMany(mappedBy = "client", cascade = CascadeType.ALL)
+    private List<Portfolio> portfolios = new ArrayList<>();
 
     // JPA requires a no-arg constructor
-    public Advisor() {
+    public Client() {
     }
 
     // Constructor initializing instance variables
-    public Advisor(String firstName, String lastName, String address, String phone, String email) {
+    public Client(Advisor advisor, String firstName, String lastName, String address, String phone, String email) {
+        this.advisor = advisor;
         this.firstName = firstName;
         this.lastName = lastName;
         this.address = address;
@@ -44,11 +49,17 @@ public class Advisor {
     }
 
     // Getters and Setters
-    public Long getAdvisorId() {
-        return advisorId;
+    public Long getClientId() {
+        return clientId;
     }
 
-    // No setter for ID required
+    public Advisor getAdvisor() {
+        return advisor;
+    }
+
+    public void setAdvisor(Advisor advisor) {
+        this.advisor = advisor;
+    }
 
     public String getFirstName() {
         return firstName;
@@ -90,11 +101,11 @@ public class Advisor {
         this.email = email;
     }
 
-    public List<Client> getClients() {
-        return clients;
+    public List<Portfolio> getPortfolios() {
+        return portfolios;
     }
 
-    public void setClients(List<Client> clients) {
-        this.clients = clients;
+    public void setPortfolios(List<Portfolio> portfolios) {
+        this.portfolios = portfolios;
     }
 }
